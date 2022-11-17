@@ -7,6 +7,8 @@ class Bill:
         self.period = period
 
 
+
+
 class Flatmate:
     """
     Object that contains data about a flatmate (name, days spent in the house).
@@ -15,8 +17,9 @@ class Flatmate:
         self.name = name
         self.days_in_house = days_in_house
 
-    def pay(self, bill):
-        return bill.amount/2
+    def pay(self, bill, flatmate2):
+        weight = self.days_in_house / (self.days_in_house + flatmate2.days_in_house)
+        return bill * weight
 
 
 class PdfReport:
@@ -28,7 +31,8 @@ class PdfReport:
         pass
 
 
-the_bill = Bill(120, 'March 2021')
-jonh = Flatmate('Jonh', 20)
-mary = Flatmate('Mary', 27)
-print(jonh.pay(the_bill))
+the_bill = Bill(amount=500, period='March 2021')
+john = Flatmate(name='John', days_in_house=20)
+mary = Flatmate(name='Mary', days_in_house=27)
+print(john.pay(bill=the_bill.amount, flatmate2=mary))
+print(mary.pay(bill=the_bill.amount, flatmate2=john))
