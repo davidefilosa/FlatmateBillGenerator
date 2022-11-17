@@ -1,3 +1,4 @@
+import webbrowser
 from fpdf import FPDF
 
 
@@ -20,7 +21,7 @@ class Flatmate:
 
     def pay(self, bill, flatmate2):
         weight = self.days_in_house / (self.days_in_house + flatmate2.days_in_house)
-        return round(bill.amount * weight,2)
+        return round(bill.amount * weight, 2)
 
 
 class PdfReport:
@@ -47,12 +48,40 @@ class PdfReport:
         pdf.cell(150, 10, txt=flatmate2.name, ln=0, align='L')
         pdf.cell(150, 10, txt=f'{flatmate2.pay(bill, flatmate1)}$', ln=1, align='L')
         pdf.output(f'{self.filename}.pdf')
+        webbrowser.open(f'{self.filename}.pdf')
 
 
-the_bill = Bill(amount=500, period='November 2022')
-john = Flatmate(name='John', days_in_house=20)
-mary = Flatmate(name='Mary', days_in_house=27)
-print(john.pay(bill=the_bill, flatmate2=mary))
-print(mary.pay(bill=the_bill, flatmate2=john))
-report = PdfReport('november_bill')
-report.generate(flatmate1=john, flatmate2=mary, bill=the_bill)
+while True:
+    try:
+        amount = float(input('Please add the bill amount: '))
+    except ValueError:
+        print('The bill amount should be a number. Please enter it again: ')
+        continue
+
+    period = input('Please enter the bill period. E.g. December 2022: ')
+    flatmate1_name = input('What his the name of the first flatmate? ')
+    try:
+        flatmate1_days_in_house = int(input(f'How many days {flatmate1_name} spent in the house? '))
+    except ValueError:
+        print('The days should be a number. Please enter it again: ')
+        continue
+
+    flatmate2_name = input('What his the name of the second flatmate? ')
+    try:
+        flatmate2_days_in_house = int(input(f'How many days {flatmate2_name} spent in the house? '))
+    except ValueError:
+        print('The days should be a number. Please enter it again: ')
+        continue
+
+    the_bill = Bill(amount, period)
+    flatmate1 = Flatmate(name=flatmate1_name, days_in_house=flatmate1_days_in_house)
+    flatmate2 = Flatmate(name=flatmate2_name, days_in_house=flatmate2_days_in_house)
+    print(flatmate1.pay(bill=the_bill, flatmate2=flatmate2))
+    print(flatmate2.pay(bill=the_bill, flatmate2=flatmate1))
+    report = PdfReport(f'{the_bill.period.replace(" ", "_")}')
+    report.generate(flatmate1=flatmate1, flatmate2=flatmate2, bill=the_bill)
+    y = input('Do you want to generate another report? Y/N: ')
+    if y.upper() == 'Y':
+        continue
+    else:
+        break
