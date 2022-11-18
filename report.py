@@ -35,7 +35,7 @@ class PdfReport:
 
 
 class FileSharer:
-    def __init__(self, filepath, api_key='AhzQO8uKTZOpkvyprZ8p3z'):
+    def __init__(self, filepath, api_key=''):
         self.filepath = filepath
         self.api_key = api_key
 
