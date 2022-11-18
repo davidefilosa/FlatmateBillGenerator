@@ -1,5 +1,5 @@
 from flat import Bill, Flatmate
-from report import PdfReport
+from report import PdfReport, FileSharer
 
 while True:
     try:
@@ -30,6 +30,8 @@ while True:
     print(f'{flatmate2.name} has to pay: {flatmate2.pay(bill=the_bill, flatmate2=flatmate1)}')
     report = PdfReport(f'{the_bill.period.replace(" ", "_")}')
     report.generate(flatmate1=flatmate1, flatmate2=flatmate2, bill=the_bill)
+    file_share = FileSharer(f'invoices/{report.filename}.pdf')
+    print(file_share.share())
     y = input('Do you want to generate another report? Y/N: ')
     if y.upper() == 'Y':
         continue
